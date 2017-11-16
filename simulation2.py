@@ -56,9 +56,9 @@ for k in range(100):
 			fieldnames = ['block_number', 'adv_stake_percent', 'inflation_rate', 'start_staked_percent', 'bonded_percent']
 			writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
 			writer.writeheader()
-			writer.writerow({'block_number':1, 'adv_stake_percent':1, 'inflation_rate':4, 'start_staked_percent':6, 'bonded_percent':9})
-			# for j in range(len(staked)):
-			# 	writer.writerow({'block_number': dates[j], 'adv_stake_percent': staked[j], 'inflation_rate': inflation[i], 'start_staked_percent': 25, 'bonded_percent': 10 })
+			#writer.writerow({'block_number':1, 'adv_stake_percent':1, 'inflation_rate':4, 'start_staked_percent':6, 'bonded_percent':9})
+			for j in range(len(staked)):
+				writer.writerow({'block_number': dates[j], 'adv_stake_percent': staked[j], 'inflation_rate': inflation[i], 'start_staked_percent': 25, 'bonded_percent': 10 })
 
 
 		print(staked)
