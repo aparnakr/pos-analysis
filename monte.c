@@ -1,4 +1,4 @@
-// assumption: the validator set doesn't increase or change.
+/* assumption: the validator set doesn't increase or change. */ 
 #include <time.h>
 #include <stdlib.h>
 #include <math.h>
@@ -9,74 +9,56 @@ void monte_carlo(double inflation, double total_p_bonded, double p_adver){
 
 	srand(time(NULL)); 
 
-	int t = 0; //number of blocks
-	double total = 87936854.71875; //current ETH supply in the market
-	double bonded = total * total_p_bonded;  //amount of ETH bonded
-	double myBond = bonded * p_adver;  // adversary's inital stake (I am the adversary)
-	double fees = 0.161/163.05; // worst case avg fees
-	double infl_amt = 1; // from range 1% to 14%
-	double number_blocks_year = 525600 * 60/ 15; // 15 second block ts
-	double infl_quotient = powl((1.0 + infl_amt/100.0),(1/(number_blocks_year))); 
+	int t = 0; 										/* Number of blocks */ 
+	double total = 87936854.71875; 					/* Current ETH supply in the market */
+	double bonded = total * total_p_bonded; 		/* Amount of ETH bonded */ 
+	double myBond = bonded * p_adver;  				/* Adversary's inital stake (I am the adversary) */ 
+	double fees =  0.161 / 163.05;					/* Worst case avg fees over a month from blockchain.info  */
+	double infl_amt = 1; 							/* from range 1% to 14% */ 
+	double number_blocks_year = 525600 * 60 / 15;   /* 15 second block ts */
 
+/* 	We calculate infl_quotient as follows:
+		(1.0y)^1/x
+	Example: if infl_amt = 5% and the time chunks is 6 months
+	 Then (1.05)^(1/(12/6)) is the inflation_quotient. */
+	double infl_quotient = powl((1.0 + infl_amt / 100.0), (1 / (number_blocks_year))); 
+	double reward;
 
-	printf("%f\n", number_blocks_year);
-	double eecs =  ((double)1.0 )/ ((double) number_blocks_year);
-	printf("1 over 100 %f \n", eecs);
-	//printf("num blocks %Lf \n", number_blocks_year);
-	//printf("%Lf\n", infl_quotient);
-	/* We calculate infl_quotient as follows:
-	 1.0y)^1/x 
-	 Example if infl_amt = 5% and the time chunks is 6 months
-	 Then (1.05)^(1/(12/6)) is the inflation_quotient*/
-
-	double reward = 3.0;
-
-	//for plotting
+	/* Plotting data */
 	int dates [1000];
 	dates[0] = t;
 	double staked[1000];
-	staked[0] = 100* myBond/bonded;
+	staked[0] = 100 * myBond/bonded;
 
-	while(t <1000000000){
+	while(t < 1000000000){
 
-		reward = (total * infl_quotient) - total; // 21% infl, n root(1.inflrate) in round 1, the block reward is 10 , 11,etc. 
-	    fees = fees * infl_quotient;
+		reward = (total * infl_quotient) - total; 		/* Inflation rate multiplied in at each block*/
+	    fees = fees * infl_quotient; 					/* Inflation rate also affects fees */
 	    double ran = (double)(rand()%100);
-	    //printf("random: %f, stake %f \n", ran, myBond/bonded);
 
-	    if(ran < (myBond/bonded) * 100){
-	    	myBond += fees; //only if I am the proposer should I get transaction fees
-	    } 
+	    if(ran < (myBond / bonded) * 100){
+	    	//printf(" WON :) my bond %.9f, total bonded %.9f , percent %.9f \n", myBond, bonded, 100 * (myBond/bonded));
+	    	myBond += fees; 							/* Only if I am the proposer should I get transaction fees */
+	    }else{
 
-	    myBond =  myBond + (reward * (myBond / bonded)); // every round I get block validation rewards proportional to my stake in that round
-	    bonded = bonded + reward + fees; //every round bonded increases by reward(minted from thin air) and the tx fees paid which are rebonded
-	    total = total * infl_quotient; //total every round increases
-
-	    if(t%1000000 == 0){
-	        double prop = myBond/bonded;
-	        //printf("%Lf \n", prop);
-	        staked[((int)t)%1000000] = 100*prop;
-	        dates[((int)t)%1000000] = t;
+	    //printf(" LOST :( my bond %.9f, total bonded %.9f , percent %.9f \n", myBond, bonded, 100 * (myBond/bonded));
 	    }
 
-	    t+=1;
+	    myBond =  myBond + (reward * (myBond / bonded)); /* Every round I get block validation rewards proportional to my stake in that round */
+	    bonded = bonded + fees + reward; 				 /* Every round bonded increases by reward(minted from thin air) and the tx fees paid which are rebonded */
+	    total = total * infl_quotient; 					 /* Total every round increases */
+
+	    t++;
+
+	    if(t % 1000000 == 0){
+	        double prop = myBond/bonded;
+	        printf("%.9f \n", prop);
+	        staked[((int)t) % 1000000] = 100 * prop;
+	        dates[((int)t) % 1000000] = t;
+	    }
 
 	}
-	// double x = 1000000; 
-	// double total = 0; 
-	// double rest_of_network = 9000000; 
-	// int t = 0;
-	// total = rest_of_network + x; 
-	// while (x/total < 0.33){
-	// 	t = t + 1;
-	// 	double prob = x/total;
-	// 	double ran = (double)(rand()%100);
-	//     if ( ran < prob * 100){
-	//             x = x + r;
-	//         }
-	//         total = total + r;
-	// }
-	//return t;
+	
    // return &staked;
 
 }
