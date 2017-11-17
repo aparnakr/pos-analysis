@@ -1,6 +1,7 @@
 .SUFFIXES:
 .SUFFIXES: .o .cpp
 
+CC=g++
 FLAGS=-O3 -Wall -msse -msse2 -msse3 -march=native -fopenmp -c
 CFLAGS=$(FLAGS)
 CXXFLAGS=-std=c++11 $(FLAGS)
