@@ -1,6 +1,7 @@
 /* assumption: the validator set doesn't increase or change. */ 
 #include <time.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <math.h>
 
 
@@ -13,7 +14,8 @@ void monte_carlo(double inflation, double total_p_bonded, double p_adver){
 	double total = 87936854.71875; 					/* Current ETH supply in the market */
 	double bonded = total * total_p_bonded; 		/* Amount of ETH bonded */ 
 	double myBond = bonded * p_adver;  				/* Adversary's inital stake (I am the adversary) */ 
-	double fees =  0.161 / 163.05;					/* Worst case avg fees over a month from blockchain.info  */
+	// double fees =  0.161 / 163.05;				/* Worst case avg fees over a month from blockchain.info  */
+	double fees = 0.3;
 	double infl_amt = 1; 							/* from range 1% to 14% */ 
 	double number_blocks_year = 525600 * 60 / 15;   /* 15 second block ts */
 
@@ -22,6 +24,7 @@ void monte_carlo(double inflation, double total_p_bonded, double p_adver){
 	Example: if infl_amt = 5% and the time chunks is 6 months
 	 Then (1.05)^(1/(12/6)) is the inflation_quotient. */
 	double infl_quotient = powl((1.0 + infl_amt / 100.0), (1 / (number_blocks_year))); 
+	printf("%0.9f \n", infl_quotient);
 	double reward;
 
 	/* Plotting data */
@@ -29,14 +32,18 @@ void monte_carlo(double inflation, double total_p_bonded, double p_adver){
 	dates[0] = t;
 	double staked[1000];
 	staked[0] = 100 * myBond/bonded;
+	FILE * fp;
+	char *name = NULL;
+	str_append(&name, "/Users/aparnakrishnan/Desktop/casper/mc_%.3f_%.3f_%.3f.txt", inflation, total_p_bonded, p_adver);
+	fp = fopen (name,"w");
 
 	while(t < 1000000000){
 
 		reward = (total * infl_quotient) - total; 		/* Inflation rate multiplied in at each block*/
 	    fees = fees * infl_quotient; 					/* Inflation rate also affects fees */
-	    double ran = (double)(rand()%100);
+	    double ran = ((double) rand()) / RAND_MAX;
 
-	    if(ran < (myBond / bonded) * 100){
+	    if(ran < myBond / bonded){
 	    	//printf(" WON :) my bond %.9f, total bonded %.9f , percent %.9f \n", myBond, bonded, 100 * (myBond/bonded));
 	    	myBond += fees; 							/* Only if I am the proposer should I get transaction fees */
 	    }else{
@@ -52,12 +59,14 @@ void monte_carlo(double inflation, double total_p_bonded, double p_adver){
 
 	    if(t % 1000000 == 0){
 	        double prop = myBond/bonded;
-	        printf("%.9f \n", prop);
+	        //printf("%0.9f %0.9f %0.9f \n", prop, myBond, bonded);
+	        fprintf ("block: %d, stake: %6f", t, 100*prop);
 	        staked[((int)t) % 1000000] = 100 * prop;
 	        dates[((int)t) % 1000000] = t;
 	    }
 
 	}
+	fclose (fp);
 	
    // return &staked;
 
@@ -65,24 +74,30 @@ void monte_carlo(double inflation, double total_p_bonded, double p_adver){
 
 int main(int argc, char const *argv[])
 {	
-	monte_carlo(1.0, 0.1, 0.25);
-	// int num_runs = 1;
-	// double staked[1000 * num_runs];
+	int num_runs = 1;
+	double staked[1000 * num_runs];
+	int total_p_bonded = 5;
+	int p_adver = 35;
 
-	// //#pragma omp parallel for
-	// for( int i = 0; i < num_runs; i++) {
+	#pragma omp parallel for
+	for (int i = 0; i < num_runs; i++) {
+		#pragma omp parallel for
+		for (int j = 0; j < total_p_bonded; j++){
+			#pragma omp parallel for
+			for (int k = 0; k < p_adver; k++){
+				monte_carlo(1.0, ((double)total_p_bonded)/100.0, ((double)p_adver/100.0));
+			}
+		}
+		// double* stake_m = monte_carlo(1.0, 0.1, 0.25);
+		// printf("%f", stake_m[0]);
+		// int k = 0;
+		// for (int j = i * 1000; j < (j + 1) * 1000; ++j)
+		// {
+		// 	staked[j] = stake_m[k];
+		// 	k++;
+		// }
 
-	// 	monte_carlo(1.0, 0.1, 0.25);
-	// 	// double* stake_m = monte_carlo(1.0, 0.1, 0.25);
-	// 	// printf("%f", stake_m[0]);
-	// 	// int k = 0;
-	// 	// for (int j = i * 1000; j < (j + 1) * 1000; ++j)
-	// 	// {
-	// 	// 	staked[j] = stake_m[k];
-	// 	// 	k++;
-	// 	// }
-
-	// }
+	}
 
 	return 0;
 }
