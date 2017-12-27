@@ -17,9 +17,9 @@ for k in range(100):
 		total = 87936854.71875 #current ETH supply in the market
 		bonded = total/10.0 #amount of ETH bonded
 		myBond = bonded * 0.25 # adversary's inital stake (I am the adversary)
-		fees = 0.161/163.05 # ?
+		fees = 0.3 #0.161/163.05 # ?
 		infl_quotient = inflation[i] # from range 1% to 14%
-
+  		print(infl_quotient)
 		number_blocks_year = 525600 * 60/ 15 # 15 second block ts
 		infl_quotient = (1.0 + infl_quotient/100.0)**(1/float(number_blocks_year)) # (1.0y)^1/x 
 
