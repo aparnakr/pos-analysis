@@ -1,13 +1,11 @@
 from math import *
 from itertools import *
 from decimal import Decimal
-#from np import *
+from numba import jit, njit, prange
 
 
 num_rounds = 3
 X_0 = [1000 for i in range(64)]
-# for i in range(64):
-# 	X_0 = [1000, 1212, 1332, 2110, 1333, 1412, 1990]
 num_validators = len(X_0)
 
 # This calculates the multinomial i.e 
@@ -42,6 +40,7 @@ def prob_win_vector(n, m, Y, X_0):
 	#print("product",product)
 	return Decimal(product * coeff) / Decimal(denom)
 
+@jit
 def multichoose(k, objects):
     """n multichoose k multisets from the list of objects.  n is the size of
     the objects."""
@@ -130,5 +129,5 @@ def expected_value(X_0, n, m):
 # for Y in all_sets(3,4):
 # 	#print(Y, prob_win_vector(4, 3, Y, [1, 2, 1]))
 # 	prob+= prob_win_vector(4, 3, Y, [1, 2, 1])
-#print(expected_value(X_0, num_rounds, num_validators))
+print(expected_value(X_0, num_rounds, num_validators))
 print(prob_any_threshold(X_0, Decimal(1.0/3), num_rounds,num_validators))
