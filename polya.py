@@ -16,16 +16,6 @@ def multinomial(arr_len, num, arr_denom):
 		return 0
 	denom = 1
 	for e in arr_denom:
-		denom *= factorial_memo[e]
-	return Decimal(factorial_memo[num])/Decimal(denom)
-
-# This calculates the multinomial i.e
-#  n!/ (y1! * y2! .. * ym!)
-def multinomial(arr_len, num, arr_denom):
-	if sum(arr_denom) != num:
-		return 0
-	denom = 1
-	for e in arr_denom:
 		denom *= factorial(e)
 	return Decimal(factorial(num))/Decimal(denom)
 
