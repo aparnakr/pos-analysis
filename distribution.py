@@ -12,10 +12,11 @@ getcontext().prec = 28
 
 def main(validators, num_rounds):
     validators = list(validators) #Don't mutate
-    for _ in range(num_rounds):
-        total_stake = sum(validators)
-        validators = [validator + (validator/total_stake) for validator in validators]
-    return validators
+    total_stake = sum(validators)
+    factor = Decimal(1)
+    for n in range(num_rounds):
+        factor *= (1 + (1 / (total_stake + n)))
+    return [validator*factor for validator in validators]
 
 print("Expected distribution of provided", num_validators, "validators after", num_rounds)
 import time
