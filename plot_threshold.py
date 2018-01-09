@@ -4,7 +4,8 @@ from math import *
 import random
 from decimal import *
 
-num_rounds = 5000
+num_rounds = 1000
+debug = False
 # Enter your own validator set if you want to use a specific set
 validators = []
 stake_reward_per_round = 1
@@ -13,7 +14,7 @@ getcontext().prec = 15
 getcontext().Emax = 1000000
 # Otherwhise fill in one set of parameters,
 # either set generate_type to uniform, constant, or normal (for normal disr)
-generate_type = "normal"
+generate_type = "skew"
 num_validators = 64
 # CONSTANT DISTR PARAMETERS:
 constant_value = 10
@@ -22,6 +23,8 @@ uniform_range = (0,200)
 # NORMAL  DISTR PARAMETERS: Format is (mean, standard deviation)
 # note negative numbers will not be generated
 norm_dist_parameters = (45, 15)
+# SKEW PARAMETERS
+skewed_percentage = .3
 
 generate = (validators == [])
 if generate:
@@ -35,14 +38,18 @@ if generate:
         for x in range(len(validators)):
             while validators[x] < 0:
                 validators[x] = random.normalvariate(norm_dist_parameters[0],norm_dist_parameters[1])
-total_stake = Decimal(sum(validators))
+    elif generate_type == "skew":
+        validators = [random.uniform(uniform_range[0],uniform_range[1]) for x in range(num_validators-1)]
+        validators.append(skewed_percentage * sum(validators) / (1 - skewed_percentage))
 for x in range(len(validators)):
     validators[x] = Decimal(validators[x] / stake_reward_per_round)
-#print("validators = ", validators)
-#print(total_stake)
+total_stake = Decimal(sum(validators))
+if debug:
+    print("validators = ", validators)
+    print(total_stake)
 
 #If a probability is less than epsilon, skip consequent calculations for that validator / pair
-epsilon = Decimal(10**-12)
+epsilon = Decimal(10**-15)
 
 # Computes (start + length - 1)! / (start - 1)!
 fact_memo = {}
