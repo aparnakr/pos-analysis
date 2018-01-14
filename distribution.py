@@ -18,11 +18,10 @@ def main(validators, num_rounds):
         factor *= (1 + (1 / (total_stake + n)))
     return [validator*factor for validator in validators]
 
-print("Expected distribution of provided", num_validators, "validators after", num_rounds)
+print("Expected distribution of provided", num_validators, "validators after", num_rounds, "\n")
 import time
 t0 = time.clock()
 distribution = main(validators, num_rounds)
-print("calculation complete")
 tf = time.clock()
-print(distribution)
+print(distribution, "\n")
 print(str(tf- t0) +" seconds process time to calculate")

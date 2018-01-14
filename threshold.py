@@ -31,10 +31,12 @@ num_rounds = int(input("The number of rounds you want to run the simulation for 
 gtype = int(input("Type of reward scheme - \n Type 1 for reward evenly distributed amongst all the validators \n Type 2 for a skewed distribution \n"))
 if gtype == 1:
     generate_type = "constant"
+    ratio = float(input("Ratio of stake to rewards of each validator \n"))
+    constant_value = ratio
 elif gtype == 2:
     generate_type = "skew"
-    skewed_percentage = float(input("proportion of stake the highest stakeholder has\n"))
-num_validators = int(input("number of validators \n"))
+    skewed_percentage = float(input("Proportion of stake the highest stakeholder has\n"))
+num_validators = int(input("Number of validators \n"))
 
 # Function to generate validator set 
 generate = (validators == [])
