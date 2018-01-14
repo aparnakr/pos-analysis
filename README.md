@@ -6,7 +6,7 @@ The proof-of-stake system we model is one where rewards given out at every round
 2. Run `python threshold.py` 
 3. Input the parameters as shown.
 #### Case 1: Initial stake is evenly distributed amongst validators
-######Example:
+###### Example:
 <br />
 The number of rounds you want to run the simulation for <br />
 **100** <br />
@@ -20,7 +20,7 @@ Number of validators <br />
 **64** <br />
 
 #### Case 2: Initial stake distributed amongst validators is skewed
-######Example:
+###### Example:
 <br />
 The number of rounds you want to run the simulation for <br />
 **100** <br />
@@ -34,5 +34,5 @@ Number of validators <br />
 **64** <br />
                    
  ## Calculating the expected distirbution of all the validators after *n* rounds:                  
-
-  
+ 4. In `distribution.py` set the `validators[]` array to be the desired initial distribution of stake. 
+ 5. Run `python distribution.py`
