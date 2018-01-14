@@ -8,14 +8,14 @@ The proof-of-stake system we model is one where rewards given out at every round
   - ### Case 1: initial stake is evenly distributed amongst validators
   Example: The number of rounds you want to run the simulation for <br />
             *100* <br />
-            Type of reward scheme - 
-                Type 1 for reward evenly distributed amongst all the validators 
-                Type 2 for a skewed distribution 
-            *1*
-            Ratio of stake to rewards of each validator
-            *10*
-            Number of validators
-            *64*
+            Type of reward scheme -  <br />
+                Type 1 for reward evenly distributed amongst all the validators <br />
+                Type 2 for a skewed distribution <br />
+            *1* <br />
+            Ratio of stake to rewards of each validator <br />
+            *10* <br />
+            Number of validators <br />
+            *64* <br />
             
             
             
