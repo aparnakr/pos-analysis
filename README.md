@@ -9,7 +9,7 @@ The proof-of-stake system we model is one where rewards given out at every round
 ###### Example:
 <br />
 The number of rounds you want to run the simulation for <br />
-**100** <br />
+__ 100 __ <br />
 Type of reward scheme -  <br />
     Type 1 for reward evenly distributed amongst all the validators <br />
     Type 2 for a skewed distribution <br />
