@@ -1,0 +1,7 @@
+# Polya's urn simulations 
+The proof-of-stake system we model is one where rewards given out at every round is a constant amount. For the a chosen number of rounds, we calculate the probability of any validator reaching the 1/3 threshold. We also calculate the expected distribution of all the validators after $n$ rounds.
+
+##Calculating the probability that any validator reaches the 1/3 stake threshold:
+1. Clone the repository
+2. Run python threshold.py 
+3. Input the parameters as shown. 
