@@ -26,6 +26,17 @@ norm_dist_parameters = (45, 15)
 # SKEW PARAMETERS
 skewed_percentage = .3
 
+# Input 
+num_rounds = int(input("The number of rounds you want to run the simulation for \n"))
+gtype = int(input("Type of reward scheme - \n Type 1 for reward evenly distributed amongst all the validators \n Type 2 for a skewed distribution \n"))
+if gtype == 1:
+    generate_type = "constant"
+elif gtype == 2:
+    generate_type = "skew"
+    skewed_percentage = float(input("proportion of stake the highest stakeholder has\n"))
+num_validators = int(input("number of validators \n"))
+
+# Function to generate validator set 
 generate = (validators == [])
 if generate:
     generate_type = generate_type.lower().strip()
@@ -103,7 +114,6 @@ def main(num_rounds, second_order=True):
     for validator in range(len(validators)):
         TOTAL += solve_validator(validators[validator],
             total_stake - validators[validator], Y[validator], num_rounds)
-    print("First order approximation complete")
     # print("First order probability of failure =",TOTAL*100, "%")
     if not second_order:
         return TOTAL
@@ -111,7 +121,6 @@ def main(num_rounds, second_order=True):
         for j in range(i):
             TOTAL -= solve_validator_pair(validators[i], validators[j],
                 total_stake - validators[i] - validators[j], Y[i], Y[j], num_rounds)
-    print("Second order approximation complete")
     return TOTAL
 
 # TODO Store denominator and minimum_number_of_selections calculations.
@@ -147,7 +156,7 @@ def solve_validator_pair(value1, value2, rest, min_selection1, min_selection2, n
                 break
     return total_probability / denominator
 
-print("Computing the probability that the system fails for the given set of %s validators with %s rounds." % (num_validators, num_rounds))
+print("Computing the probability that any validator reaches 1/3 of the total stake for the given set of %s validators with %s rounds." % (num_validators, num_rounds))
 import time
 t0 = time.clock()
 print("Probability of failure is", 100*main(num_rounds), "%")
