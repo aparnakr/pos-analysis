@@ -6,15 +6,15 @@ The proof-of-stake system we model is one where rewards given out at every round
 2. Run `python threshold.py` 
 3. Input the parameters as shown.
   - ### Case 1: initial stake is evenly distributed amongst validators
-  Example: `The number of rounds you want to run the simulation for`
+  Example: The number of rounds you want to run the simulation for
             *100*
-            `Type of reward scheme - 
+            Type of reward scheme - 
                 Type 1 for reward evenly distributed amongst all the validators 
-                Type 2 for a skewed distribution `
+                Type 2 for a skewed distribution 
             *1*
-            `Ratio of stake to rewards of each validator`
+            Ratio of stake to rewards of each validator
             *10*
-            `Number of validators`
+            Number of validators
             *64*
             
             
